@@ -3,22 +3,33 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
-    <TargetFramework>net5.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net6.0</TargetFramework>
 
+    <VersionPrefix>1.0.1</VersionPrefix>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>license</ToolCommandName>
     <SignAssembly>False</SignAssembly>
     <Authors>frg2089</Authors>
     <PackageProjectUrl>https://github.com/$(Authors)/$(AssemblyName)</PackageProjectUrl>
     <RepositoryUrl>https://github.com/$(Authors)/$(AssemblyName)</RepositoryUrl>
-    <PackageTags>license cli</PackageTags>
+    <PackageTags>license-cli</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Copyright>Copyright © 2021 frg2089</Copyright>
+    <Copyright>Copyright © 2021 $(Authors)</Copyright>
+    <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+    <None Include="..\..\ReadMe.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="6.0.0" />
   </ItemGroup>
 
 </Project>
