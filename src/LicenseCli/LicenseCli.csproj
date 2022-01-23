@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <TargetFramework>net6.0</TargetFramework>
 
-    <VersionPrefix>1.0.1</VersionPrefix>
+    <VersionPrefix>1.0.4</VersionPrefix>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>license</ToolCommandName>
     <SignAssembly>False</SignAssembly>
@@ -16,7 +16,7 @@
     <PackageTags>license-cli</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Copyright>Copyright © 2021 $(Authors)</Copyright>
+    <Copyright>Copyright © 2021-2022 $(Authors)</Copyright>
     <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>

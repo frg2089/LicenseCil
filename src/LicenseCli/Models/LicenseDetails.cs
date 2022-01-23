@@ -3,104 +3,58 @@ using System.Text.Json.Serialization;
 namespace LicenseCli.Models;
 public sealed record CrossRef
 {
-    [JsonConstructor]
-    public CrossRef(
-        string match,
-        string url,
-        bool isValid,
-        bool isLive,
-        DateTime timestamp,
-        bool isWayBackLink,
-        int order
-    )
-    {
-        Match = match;
-        Url = url;
-        IsValid = isValid;
-        IsLive = isLive;
-        Timestamp = timestamp;
-        IsWayBackLink = isWayBackLink;
-        Order = order;
-    }
-
     [JsonPropertyName("match")]
-    public string Match { get; }
+    public string? Match { get; set; }
 
     [JsonPropertyName("url")]
-    public string Url { get; }
+    public string? Url { get; set; }
 
     [JsonPropertyName("isValid")]
-    public bool IsValid { get; }
+    public bool IsValid { get; set; }
 
     [JsonPropertyName("isLive")]
-    public bool IsLive { get; }
+    public bool IsLive { get; set; }
 
     [JsonPropertyName("timestamp")]
-    public DateTime Timestamp { get; }
+    public DateTime Timestamp { get; set; }
 
     [JsonPropertyName("isWayBackLink")]
-    public bool IsWayBackLink { get; }
+    public bool IsWayBackLink { get; set; }
 
     [JsonPropertyName("order")]
-    public int Order { get; }
+    public int Order { get; set; }
 }
 
 public sealed record LicenseDetails
 {
-    [JsonConstructor]
-    public LicenseDetails(
-        bool isDeprecatedLicenseId,
-        bool isFsfLibre,
-        string licenseText,
-        string standardLicenseTemplate,
-        string name,
-        string licenseId,
-        List<CrossRef> crossRef,
-        List<string> seeAlso,
-        bool isOsiApproved,
-        string licenseTextHtml
-    )
-    {
-        IsDeprecatedLicenseId = isDeprecatedLicenseId;
-        IsFsfLibre = isFsfLibre;
-        LicenseText = licenseText;
-        StandardLicenseTemplate = standardLicenseTemplate;
-        Name = name;
-        LicenseId = licenseId;
-        CrossRef = crossRef;
-        SeeAlso = seeAlso;
-        IsOsiApproved = isOsiApproved;
-        LicenseTextHtml = licenseTextHtml;
-    }
-
     [JsonPropertyName("isDeprecatedLicenseId")]
-    public bool IsDeprecatedLicenseId { get; }
+    public bool IsDeprecatedLicenseId { get; set; }
 
     [JsonPropertyName("isFsfLibre")]
-    public bool IsFsfLibre { get; }
+    public bool IsFsfLibre { get; set; }
 
     [JsonPropertyName("licenseText")]
-    public string LicenseText { get; }
+    public string? LicenseText { get; set; }
 
     [JsonPropertyName("standardLicenseTemplate")]
-    public string StandardLicenseTemplate { get; }
+    public string? StandardLicenseTemplate { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name { get; }
+    public string? Name { get; set; }
 
     [JsonPropertyName("licenseId")]
-    public string LicenseId { get; }
+    public string? LicenseId { get; set; }
 
     [JsonPropertyName("crossRef")]
-    public IReadOnlyList<CrossRef> CrossRef { get; }
+    public List<CrossRef>? CrossRef { get; set; }
 
     [JsonPropertyName("seeAlso")]
-    public IReadOnlyList<string> SeeAlso { get; }
+    public List<string>? SeeAlso { get; set; }
 
     [JsonPropertyName("isOsiApproved")]
-    public bool IsOsiApproved { get; }
+    public bool IsOsiApproved { get; set; }
 
     [JsonPropertyName("licenseTextHtml")]
-    public string LicenseTextHtml { get; }
+    public string? LicenseTextHtml { get; set; }
 }
 

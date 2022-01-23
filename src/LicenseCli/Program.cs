@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -23,27 +26,30 @@ static class Program
     public static async Task SearchLicense(string match)
     {
         using HttpClient client = GetHttpClient();
-        foreach (var license in await GetLicensesIndex(client))
+        foreach (var license in (await GetLicensesIndex(client))?.Licenses!)
         {
-            if (Regex.IsMatch(license.LicenseId, match))
+            if (Regex.IsMatch(license.LicenseId!, match))
                 Console.WriteLine($" {license.LicenseId,-20} | {license.Name} ");
         }
     }
 
     public static async Task UseLicense(string licenseId, string? authors = default, bool noOutput = false)
     {
-        string cacheDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cache");
+        string cacheDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".cache");
         string localLicensePath = Path.Combine(cacheDir, $"{licenseId.ToUpper()}.TEMPLATE");
         if (!File.Exists(localLicensePath))
         {
             using HttpClient client = GetHttpClient();
 
-            LicenseDeclare? licenseDeclare = (await GetLicensesIndex(client)).FirstOrDefault(x => string.Equals(x.LicenseId, licenseId, StringComparison.OrdinalIgnoreCase));
+            LicenseDeclare? licenseDeclare = (await GetLicensesIndex(client)).Licenses?.FirstOrDefault(x => string.Equals(x.LicenseId, licenseId, StringComparison.OrdinalIgnoreCase));
 
             if (licenseDeclare is null)
-                throw new InvalidOperationException($"License \"{licenseId}\" are not found");
+            {
+                throw new InvalidOperationException($"License \"{licenseId}\" are not found. ");
+            }
 
             await using Stream licenseStream = await client.GetStreamAsync(licenseDeclare.DetailsUrl);
+
 
             LicenseDetails? license = await JsonSerializer.DeserializeAsync<LicenseDetails>(licenseStream);
             if (license is null)
@@ -82,14 +88,18 @@ static class Program
             if (match.Success)
             {
                 var varMap = match.Value.TrimStart('<').TrimEnd('>').Split(';')
-                    .Where(x => x.Equals("var", StringComparison.OrdinalIgnoreCase))
+                    .Where(x => !x.Equals("var", StringComparison.OrdinalIgnoreCase))
                     .Select(x => x.Split('='))
                     .ToDictionary(i => i[0], i => i[1].Trim('"'));
 
                 if (varMap["name"].Equals("copyright", StringComparison.OrdinalIgnoreCase))
-                    varRegex.Replace(line, $"Copyright © {year} {authors ?? "<copyright holders>"}");
+                {
+                    line = varRegex.Replace(line, varMap["original"].Replace("<year>", year));
+                    if (!string.IsNullOrWhiteSpace(authors))
+                        line = line.Replace("<copyright holders>", authors);
+                }
                 else
-                    varRegex.Replace(line, varMap["original"]);
+                    line = varRegex.Replace(line, varMap["original"]);
             }
             if (!noOutput)
                 Console.WriteLine(line);
@@ -98,26 +108,101 @@ static class Program
 
     }
 
+    public static async Task ListLicenses()
+    {
+        using HttpClient client = GetHttpClient();
+        var licenses = (await GetLicensesIndex(client))?.Licenses!;
+        int lenLicenseId = licenses.Max(i => i.LicenseId!.Length);
+
+        int i = lenLicenseId - 4;
+        int j = i / 2;
+        i -= j;
+
+        Console.Write("\x1b[38;2;0;255;255m");
+        Console.Write(new string(' ', i));
+        Console.Write("SPDX");
+        Console.Write(new string(' ', j));
+        Console.Write(" |Attr| License Name");
+        Console.WriteLine();
+        Console.Write(new string('-', i + j + 5));
+        Console.Write("+----+");
+        Console.Write("--------------------");
+        Console.WriteLine();
+
+        foreach (var license in licenses.OrderBy(i => i.LicenseId, StringComparer.OrdinalIgnoreCase)!)
+        {
+            i = lenLicenseId - license.LicenseId!.Length;
+            j = i / 2;
+            i -= j;
+
+            string color = license.IsDeprecatedLicenseId ? "\x1b[38;2;255;0;128m" : "\x1b[38;2;0;255;0m";
+            Console.Write(color);
+            Console.Write(new string(' ', i));
+            Console.Write(license.LicenseId);
+            Console.Write(new string(' ', j));
+            Console.Write(" | ");
+            Console.Write(license.IsFsfLibre == true ? $"\x1b[38;2;255;0;0mF{color}" : " ");
+            Console.Write(license.IsOsiApproved == true ? $"\x1b[38;2;0;233;255mO{color}" : " ");
+            Console.Write(" | ");
+            Console.Write(license.Name);
+
+
+            Console.WriteLine();
+        }
+        Console.Write("\x1b[0m");
+    }
+
     private static HttpClient GetHttpClient()
     {
         HttpClient client = new();
         string userAgent = $"LicenseCli/{typeof(Program).Assembly.GetName().Version} ({Environment.OSVersion}) dotnet {Environment.Version}";
-        client.DefaultRequestHeaders.UserAgent.Add(new(userAgent));
+        client.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
 
         return client;
     }
 
     private static async Task<LicensesIndex> GetLicensesIndex(HttpClient client)
     {
-        const string URL = "https://spdx.org/licenses/licenses.json";
+        await using Stream stream = await TryGetLicensesIndexCache(client);
 
-        await using Stream response = await client.GetStreamAsync(URL);
-
-        LicensesIndex? licenses = await JsonSerializer.DeserializeAsync<LicensesIndex>(response);
+        LicensesIndex? licenses = await JsonSerializer.DeserializeAsync<LicensesIndex>(stream);
         return licenses switch
         {
             null => throw new InvalidDataException("Faild."),
             _ => licenses
         };
+    }
+
+    private static async Task<Stream> TryGetLicensesIndexCache(HttpClient client)
+    {
+        string cache = Path.Join(AppDomain.CurrentDomain.BaseDirectory, ".cache", "index");
+        if (File.Exists(cache))
+        {
+            var time = File.GetLastWriteTimeUtc(cache);
+            if ((DateTime.UtcNow - time) < TimeSpan.FromTicks(TimeSpan.TicksPerDay))
+            {
+                Console.Error.WriteLine("Get From Cache.");
+                return File.OpenRead(cache);
+            }
+        }
+        Console.Error.WriteLine("Get From spdx.org.");
+        return await CreateCache(client, cache);
+
+    }
+
+    private static async Task<Stream> CreateCache(HttpClient client, string cache)
+    {
+        FileStream fs = File.Create(cache);
+        await using Stream response = await GetLicensesIndexOnline(client);
+        await response.CopyToAsync(fs);
+        fs.Seek(0, SeekOrigin.Begin);
+        return fs;
+    }
+
+    private static async Task<Stream> GetLicensesIndexOnline(HttpClient client)
+    {
+        const string URL = "https://spdx.org/licenses/licenses.json";
+
+        return await client.GetStreamAsync(URL);
     }
 }

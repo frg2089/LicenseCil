@@ -1,86 +1,47 @@
 using System.Collections;
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace LicenseCli.Models;
 public sealed record LicenseDeclare
 {
-    [JsonConstructor]
-    public LicenseDeclare(
-        string reference,
-        bool isDeprecatedLicenseId,
-        string detailsUrl,
-        int referenceNumber,
-        string name,
-        string licenseId,
-        List<string> seeAlso,
-        bool isOsiApproved,
-        bool? isFsfLibre
-    )
-    {
-        Reference = reference;
-        IsDeprecatedLicenseId = isDeprecatedLicenseId;
-        DetailsUrl = detailsUrl;
-        ReferenceNumber = referenceNumber;
-        Name = name;
-        LicenseId = licenseId;
-        SeeAlso = seeAlso;
-        IsOsiApproved = isOsiApproved;
-        IsFsfLibre = isFsfLibre;
-    }
-
     [JsonPropertyName("reference")]
-    public string Reference { get; }
+    public string? Reference { get; set; }
 
     [JsonPropertyName("isDeprecatedLicenseId")]
-    public bool IsDeprecatedLicenseId { get; }
+    public bool IsDeprecatedLicenseId { get; set; }
 
     [JsonPropertyName("detailsUrl")]
-    public string DetailsUrl { get; }
+    public string? DetailsUrl { get; set; }
 
     [JsonPropertyName("referenceNumber")]
-    public int ReferenceNumber { get; }
+    public int ReferenceNumber { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name { get; }
+    public string? Name { get; set; }
 
     [JsonPropertyName("licenseId")]
-    public string LicenseId { get; }
+    public string? LicenseId { get; set; }
 
     [JsonPropertyName("seeAlso")]
-    public IReadOnlyList<string> SeeAlso { get; }
+    public List<string>? SeeAlso { get; set; }
 
     [JsonPropertyName("isOsiApproved")]
-    public bool IsOsiApproved { get; }
+    public bool IsOsiApproved { get; set; }
 
     [JsonPropertyName("isFsfLibre")]
-    public bool? IsFsfLibre { get; }
+    public bool? IsFsfLibre { get; set; }
 }
 
-public sealed record LicensesIndex: IEnumerable<LicenseDeclare>
+public sealed record LicensesIndex
 {
-    [JsonConstructor]
-    public LicensesIndex(
-        string licenseListVersion,
-        List<LicenseDeclare> licenses,
-        string releaseDate
-    )
-    {
-        LicenseListVersion = licenseListVersion;
-        Licenses = licenses;
-        ReleaseDate = releaseDate;
-    }
-
     [JsonPropertyName("licenseListVersion")]
-    public string LicenseListVersion { get; }
+    public string? LicenseListVersion { get; set; }
 
     [JsonPropertyName("licenses")]
-    public IReadOnlyList<LicenseDeclare> Licenses { get; }
+    public List<LicenseDeclare>? Licenses { get; set; }
 
     [JsonPropertyName("releaseDate")]
-    public string ReleaseDate { get; }
-
-    public IEnumerator<LicenseDeclare> GetEnumerator() => Licenses.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Licenses).GetEnumerator();
+    public string? ReleaseDate { get; set; }
 }
 
