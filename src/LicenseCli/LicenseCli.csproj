@@ -4,11 +4,11 @@
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 
-    <VersionPrefix>1.0.4</VersionPrefix>
+    <VersionPrefix>1.0.5</VersionPrefix>
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>license</ToolCommandName>
+    <ToolCommandName>dotnet-license</ToolCommandName>
     <SignAssembly>False</SignAssembly>
     <Authors>frg2089</Authors>
     <PackageProjectUrl>https://github.com/$(Authors)/$(AssemblyName)</PackageProjectUrl>
@@ -16,7 +16,7 @@
     <PackageTags>license-cli</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Copyright>Copyright © 2021-2022 $(Authors)</Copyright>
+    <Copyright>Copyright © 2021-2023 $(Authors)</Copyright>
     <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
