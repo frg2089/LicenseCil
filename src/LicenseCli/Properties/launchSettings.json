@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LicenseCli": {
+      "commandName": "Project",
+      "commandLineArgs": "new GPL-3.0-or-later"
+    }
+  }
+}

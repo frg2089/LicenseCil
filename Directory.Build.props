@@ -1,0 +1,29 @@
+<Project>
+  <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net8.0;net9.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>dotnet-license</ToolCommandName>
+    <SignAssembly>False</SignAssembly>
+    <Authors>frg2089</Authors>
+    <PackageProjectUrl>https://github.com/frg2089/LicenseCli</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/frg2089/LicenseCli.git</RepositoryUrl>
+    <PackageTags>license-cli</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Copyright>Copyright © 2021-2025 $(Authors)</Copyright>
+    <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)ReadMe.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+</Project>

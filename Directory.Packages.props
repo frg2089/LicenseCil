@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <!-- Enable central package management, https://learn.microsoft.com/en-us/nuget/consume-packages/Central-Package-Management -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <GitVersionTargetFramework>net8.0</GitVersionTargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="ConsoleTables" Version="2.6.2" />
+    <PackageVersion Include="DotMake.CommandLine" Version="1.8.8" />
+    <PackageVersion Include="LikeComparison" Version="2.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <GlobalPackageReference Include="GitVersion.MsBuild" Version="6.1.0" />
+  </ItemGroup>
+</Project>

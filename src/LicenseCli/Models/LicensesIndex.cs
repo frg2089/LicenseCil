@@ -12,7 +12,7 @@ public sealed record LicenseDeclare
     public bool IsDeprecatedLicenseId { get; set; }
 
     [JsonPropertyName("detailsUrl")]
-    public string? DetailsUrl { get; set; }
+    public string DetailsUrl { get; set; } = default!;
 
     [JsonPropertyName("referenceNumber")]
     public int ReferenceNumber { get; set; }
@@ -21,7 +21,7 @@ public sealed record LicenseDeclare
     public string? Name { get; set; }
 
     [JsonPropertyName("licenseId")]
-    public string? LicenseId { get; set; }
+    public string LicenseId { get; set; } = default!;
 
     [JsonPropertyName("seeAlso")]
     public List<string>? SeeAlso { get; set; }

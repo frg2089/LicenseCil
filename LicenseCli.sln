@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C7411171-24EE-47A9-8AB3-CA07AF6EEFC6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LicenseCli", "src\LicenseCli\LicenseCli.csproj", "{5718565A-E4CF-4C00-90E5-A3C50F54E819}"
 EndProject
 Global
@@ -33,10 +31,9 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{5718565A-E4CF-4C00-90E5-A3C50F54E819} = {C7411171-24EE-47A9-8AB3-CA07AF6EEFC6}
-	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1933C65B-FBC6-4E49-974F-C8EB675547C2}
+		RESX_SortFileContentOnSave = True
+		RESX_NeutralResourcesLanguage = zh-Hans
 	EndGlobalSection
 EndGlobal
